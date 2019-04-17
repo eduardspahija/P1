@@ -6,6 +6,23 @@ def Main():
     serverName = '192.168.0.21'
     port = 12000
 
+    print('+-----------------------------------------------+---------------------------------------------------+')
+    print('|            Sintaksa e komandave               |           Lista e parametrave Opcioni jane:       |')
+    print('+-----------------------------------------------+---------------------------------------------------+')
+    print('|                  IPADRESA                     |                 KilowattToHorsepower              |')
+    print('|                NUMRIIPORTIT                   |                 HorsepowerToKilowatt              |')
+    print('|              EMRIIKOMPJUTERIT                 |                   DegreesToRadians                |')
+    print('|                    KOHA                       |                   RadiansToDegrees                |')
+    print('|                    LOJA                       |                    GallonsToLiters                |')
+    print('|           PRINTIMI {Hapesire} text            |                    LitersToGallons                |')
+    print('|       BASHKETINGELLORE {Hapesire} text        |                                                   |')
+    print('|KONVERTIMI {Hapesire} Opcioni {Hapesire} number|                                                   |')
+    print('|         FIBONACCI {Hapesire} number           |                                                   |')
+    print('|       DECIMALTOBINARY {Hapesire} number       |                                                   |')
+    print('|    DECIMALTOHEKSADECIMAL {Hapesire} number    |                                                   |')
+    print('+-----------------------------------------------+---------------------------------------------------+')
+    print('\n\n')
+
     var = input('Emri i serverit eshte: ' + serverName + ' dhe porti eshte ' + str(port) + ' , A dëshironi te i ndryshoni? (PO/JO) - > ')
     if var.upper() == "PO":
         serverName = input('Emri i serverit: -> ')
