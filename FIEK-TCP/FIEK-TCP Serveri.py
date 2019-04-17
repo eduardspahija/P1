@@ -2,16 +2,18 @@ from socket import *
 import datetime
 import random
 import string
+import sys
 import os
+from threading import *
+from _thread import *
 
-def IPADRESA():
-    return "IP Adresa e klientit eshte: " + serverName
+def IPADRESA(IPAddr):
+    return "IP Adresa e klientit eshte: " + IPAddr
 
-def NUMRIIPORTIT():
-    return "Klienti eshte duke perdorur portin: " + str(serverPort)
+def NUMRIIPORTIT(numriPortit):
+    return "Klienti eshte duke perdorur portin: " + str(numriPortit)
 
 def BASHKETINGELLORE(tekst):
-    #tekst = raw_input('Teksti? ')
     type(tekst)
     vowels = 0
     consonants = 0
@@ -32,7 +34,6 @@ def BASHKETINGELLORE(tekst):
     return "Teksti i pranuar permban " + str(consonants) + " bashkentingellore"
 
 def PRINTIMI(tekst):
-    #tekst = raw_input('Teksti? ')
     return tekst
 
 def EMRIIKOMPJUTERIT():
@@ -47,8 +48,12 @@ def KOHA():
     return now.strftime("%Y-%m-%d %H:%M:%S %p")
 
 def LOJA():
+    resp = ""
     for x in range(7):
-        return str(random.randint(1, 50))
+        resp = resp + str(random.randint(1, 50))
+        if x < 6:
+            resp = resp + ", "
+    return resp
 
 def KONVERTIMI(llojiKonvertimit, vlera):
 
@@ -129,64 +134,79 @@ def DECIMALTOHEKSADECIMAL(n):
 def ERROR():
     return "Kerkesa jo valide"
 
+def threaded(c, addr):
+    while True:
 
-serverName = '192.168.0.21'
-serverPort = 12000
-serverSocket = socket(AF_INET, SOCK_STREAM)
-serverSocket.bind((serverName, serverPort))
-print('Serveri eshte startuar ne localhost ne portin ' + str(serverPort) + '.')
-serverSocket.listen(5)
-print('Serveri eshte i gatshem te pranoj kerkesa.')
-#connectionSocket, addr = serverSocket.accept()
-while 1:
-    #pjesa e kodit qe e perdore Thread, MultiThreading
-    connectionSocket, addr = serverSocket.accept()
-    print('Klienti u lidh ne serverin %s me portin %s' % addr)
-    ClientRequest = connectionSocket.recv(1024).decode()
-    ClientRequest = ClientRequest.upper()
-    #procesimi
-    if ClientRequest == "NUMRIIPORTIT":
-        response = NUMRIIPORTIT()
-    elif ClientRequest == "IPADRESA":
-        response = IPADRESA()
-    elif ClientRequest.startswith("BASHKETINGELLORE"):
-        arg = ClientRequest.split(" ", 1)
-        #emriFunksionit = words[0]
-        teksti= arg[1]
-        response = BASHKETINGELLORE(teksti)
-    elif ClientRequest.startswith("PRINTIMI"):
-        arg = ClientRequest.split(" ", 1)
-        #emriFunksionit = words[0]
-        teksti= arg[1]
-        response = PRINTIMI(teksti)
-    elif ClientRequest == "EMRIIKOMPJUTERIT":
-        response = EMRIIKOMPJUTERIT()
-    elif ClientRequest == "KOHA":
-        response = KOHA ()
-    elif ClientRequest == "LOJA":
-        response = LOJA()
-    elif ClientRequest.startswith("KONVERTIMI"):
-        args = ClientRequest.split(" ", 2)
-        llojiKonvertimit = args[1]
-        vlera = int(args[2])
-        response = KONVERTIMI(llojiKonvertimit, vlera)
-    elif ClientRequest.startswith("FIBONACCI"):
-        arg = ClientRequest.split(" ", 1)
-        numri = int(arg[1])
-        response = str(FIBONACCI(numri))
-    elif ClientRequest.startswith("DECIMALTOBINARY"):
-        arg = ClientRequest.split(" ", 1)
-        numri = int(arg[1])
-        response = DECIMALTOBINARY(numri)
-    elif ClientRequest.startswith("DECIMALTOHEKSADECIMAL"):
-        arg = ClientRequest.split(" ", 1)
-        numri = int(arg[1])
-        response = DECIMALTOHEKSADECIMAL(numri)
+        ClientRequest = c.recv(1024).decode()
+        if not ClientRequest:
+            print('Mire u pafshim!')
+            break
 
-    else:
-        response = "Kerkesa eshte jovalide"
+        ClientRequest = ClientRequest.upper()
 
-    #print(response.decode())
-    #procesimi perfundoj
+        if ClientRequest == "NUMRIIPORTIT":
+            response = NUMRIIPORTIT(addr[1])
+        elif ClientRequest == "IPADRESA":
+            response = IPADRESA(addr[0])
+        elif ClientRequest.startswith("BASHKETINGELLORE"):
+            arg = ClientRequest.split(" ", 1)
+            teksti= arg[1]
+            response = BASHKETINGELLORE(teksti)
+        elif ClientRequest.startswith("PRINTIMI"):
+            arg = ClientRequest.split(" ", 1)
+            teksti= arg[1]
+            response = PRINTIMI(teksti)
+        elif ClientRequest == "EMRIIKOMPJUTERIT":
+            response = EMRIIKOMPJUTERIT()
+        elif ClientRequest == "KOHA":
+            response = KOHA ()
+        elif ClientRequest == "LOJA":
+            response = LOJA()
+        elif ClientRequest.startswith("KONVERTIMI"):
+            args = ClientRequest.split(" ", 2)
+            llojiKonvertimit = args[1]
+            vlera = int(args[2])
+            response = KONVERTIMI(llojiKonvertimit, vlera)
+        elif ClientRequest.startswith("FIBONACCI"):
+            arg = ClientRequest.split(" ", 1)
+            numri = int(arg[1])
+            response = str(FIBONACCI(numri))
+        elif ClientRequest.startswith("DECIMALTOBINARY"):
+            arg = ClientRequest.split(" ", 1)
+            numri = int(arg[1])
+            response = DECIMALTOBINARY(numri)
+        elif ClientRequest.startswith("DECIMALTOHEKSADECIMAL"):
+            arg = ClientRequest.split(" ", 1)
+            numri = int(arg[1])
+            response = DECIMALTOHEKSADECIMAL(numri)
+
+        else:
+            response = "Kerkesa eshte jovalide"
+
+        c.send(response.encode())
+
+    c.close()
+
+
+def Main():
+
+
+    serverName = '192.168.0.21'
+    serverPort = 12000
+    serverSocket = socket(AF_INET, SOCK_STREAM)
+    serverSocket.bind((serverName, serverPort))
+    print('Serveri eshte startuar ne localhost ne portin ' + str(serverPort) + '.')
+    serverSocket.listen(5)
+    print('Serveri eshte i gatshem te pranoj kerkesa.')
+    while True:
+        connectionSocket, addr = serverSocket.accept()
+        IpAdresaKlientit = addr[0]
+        NumriPortitKlientit = addr[1]
+        print('Klienti u lidh ne serverin ' + IpAdresaKlientit + ' me portin ' + str(NumriPortitKlientit))
+        start_new_thread(threaded, (connectionSocket, addr,))
+    serverSocket.close()
+
     connectionSocket.send(response.encode())
-connectionSocket.close()
+
+if __name__ == '__main__':
+    Main()
