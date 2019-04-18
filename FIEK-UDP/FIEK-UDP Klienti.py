@@ -36,8 +36,7 @@ UDPClientSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 while True:
 
-    var = input(
-        '\nJu lutem shenoni kerkesen: ' + '\n(IPADRESA, NUMRIIPORTIT, EMRIIKOMPJUTERIT, KOHA, LOJA, PRINTIMI, BASHKETINGELLORE, KONVERTIMI, FIBONACCI, DECIMALTOBINARY, DECIMALTOHEKSADECIMAL):'
+    var = input(  '\nJu lutem shenoni kerkesen: ' + '\n(IPADRESA, NUMRIIPORTIT, EMRIIKOMPJUTERIT, KOHA, LOJA, PRINTIMI, BASHKETINGELLORE, KONVERTIMI, FIBONACCI, DECIMALTOBINARY, DECIMALTOHEKSADECIMAL):'
         + '\n -> ')
 
     var = str.encode(var)

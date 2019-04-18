@@ -58,7 +58,7 @@ def KONVERTIMI(llojiKonvertimit, vlera):
 
     if llojiKonvertimit.upper() == "KilowattToHorsepower".upper():
       kilowatt = vlera
-      horsepower = STR(round(float(kilowatt) * 1.34102,2))
+      horsepower = round(float(kilowatt) * 1.34102,2)
       return str(kilowatt) + " kilowatt = " + str(horsepower) + " horsepower"
     elif llojiKonvertimit.upper() == "HorsepowerToKilowatt".upper():
       horsepower = vlera
@@ -134,7 +134,7 @@ def ERROR():
     return "Kerkesa jo valide"
 
 
-serverName = '192.168.0.21'
+serverName = 'localhost'
 serverPort = 12000
 
 UDPServerSocket = socket(AF_INET, SOCK_DGRAM)
@@ -167,7 +167,8 @@ while True:
     elif ClientRequest.startswith("PRINTIMI"):
         arg = ClientRequest.split(" ", 1)
         teksti= arg[1]
-        response = PRINTIMI(teksti)
+        fjala = (PRINTIMI(teksti)).lower()
+        response = fjala.capitalize()
     elif ClientRequest == "EMRIIKOMPJUTERIT":
         response = EMRIIKOMPJUTERIT()
     elif ClientRequest == "KOHA":
