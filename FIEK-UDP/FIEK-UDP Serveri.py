@@ -86,7 +86,7 @@ def KONVERTIMI(llojiKonvertimit, vlera):
 def FIBONACCI(n):
     if n<0:
         print("Numri duhet te jete me i madh se zero")
-    elif n == 1:  
+    elif n == 0:  
         return 0
     elif n == 1:
         return 1
