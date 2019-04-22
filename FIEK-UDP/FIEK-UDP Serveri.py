@@ -127,7 +127,7 @@ def DECIMALTOHEKSADECIMAL(n):
             c = "F"
 
         if (n - x != 0):
-            return DECIMALTOHEKSADECIMAL(n / 16) + str(c)
+            return DECIMALTOHEKSADECIMAL(n // 16) + str(c)
         else:
             return str(c)
 
